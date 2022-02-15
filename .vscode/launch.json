@@ -9,14 +9,14 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/net5.0/wordlehelper.dll",
+            "program": "${workspaceFolder}/WordleHelper/bin/Debug/net5.0/WordleHelper.dll",
             "args": [
-                "--word", "KI?I?",
-                "--known-letters", "LM", 
-                "--excluded-letters", "AEOUSB",
+                "--word", "M????",
+                "--known-letters", "AL", 
+                "--excluded-letters", "CDFGHIKOPQRSUVWXYZ",
                 "--dictionary-file", "${workspaceFolder}/etc/dictionary-en.txt"
             ],
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/WordleHelper",
             "console": "internalConsole",
             "stopAtEntry": false
         },
