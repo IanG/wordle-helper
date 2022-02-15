@@ -96,6 +96,7 @@ namespace iandgratton.WordleHelper
             }
 
             Console.Write("\n\n");
+            Console.ForegroundColor = startingColour;
         }
 
         private static void ShowDictionaryFile(string dictionaryFile)
