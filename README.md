@@ -33,8 +33,8 @@ git clone https://github.com/IanG/wordle-helper.git
 From the base directory build the application with:
 
 ```
-dotnet restore
-dotnet build
+dotnet restore ./WordleHelper
+dotnet build ./WordleHelper
 ```
 
 ### Running The Application
@@ -45,7 +45,7 @@ A dictionary file is provided in the ```etc``` directory which can be used with 
 #### Discover Command Line Parameters
 To see the available command line parameters run:
 ```
-dotnet run -- --help
+dotnet run --project WordleHelper -- --help
 ```
 which will report back:
 
@@ -64,7 +64,7 @@ Options:
 Locate words by providing the appropriate values for command line parameters e.g.
 
 ```
-dotnet run -- --word "M????" --known-letters "AL" --excluded-letters="CDFGHIKOPQRSUVWXYZ" --dictionary-file "./etc/dictionary-en.txt" 
+dotnet run --project WordleHelper -- --word "M????" --known-letters "AL" --excluded-letters="CDFGHIKOPQRSUVWXYZ" --dictionary-file "./etc/dictionary-en.txt" 
 ```
 
 Will give the following output:
