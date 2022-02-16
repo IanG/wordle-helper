@@ -240,12 +240,9 @@ namespace iandgratton.WordleHelper
                     {
                         if (excludedLetters != null)
                         {
-                            sb.Append($"(?![{new String(excludedLetters)}])[a-z]{{1}}");
+                            sb.Append($"(?![{new String(excludedLetters)}])");
                         }
-                        else
-                        {
-                            sb.Append("[a-z]{1}");
-                        }
+                        sb.Append("[a-z]{1}");
                     }
                     else
                     {
