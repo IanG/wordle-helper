@@ -48,24 +48,23 @@ namespace iandgratton.WordleHelper
             ShowKnownLetters(KnownLetters);
             ShowExcludedLetters(ExcudedLetters);
             ShowDictionaryFile(DictionaryFile);
-
-            WordleHelper wordleHelper = new WordleHelper(Word, KnownLetters, ExcudedLetters, DictionaryFile);
-
-            List<string> potentialWords = wordleHelper.GetPotentialWords();
-
-            ShowPotentialWords(potentialWords, Word, KnownLetters);
+            ShowPotentialWords(Word, KnownLetters, ExcudedLetters, DictionaryFile);
         }
 
-        private static void ShowPotentialWords(List<string> potentialWords, string Word, string KnownLetters)
+        private static void ShowPotentialWords(string word, string knownLetters, string excudedLetters, string dictionaryFile)
         {
             const int WORDS_PER_LINE = 10;
+
+            WordleHelper wordleHelper = new WordleHelper(word, knownLetters, excudedLetters, dictionaryFile);
+
+            List<string> potentialWords = wordleHelper.GetPotentialWords();
 
             Console.WriteLine($"\n Potential Words: {potentialWords.Count}\n");
 
             int wordsOnLine = 0;
 
             ConsoleColor startingColour = Console.ForegroundColor;
-            foreach (string word in potentialWords)
+            foreach (string potentialWord in potentialWords)
             {
                 if (wordsOnLine >= WORDS_PER_LINE)
                 {
@@ -73,13 +72,13 @@ namespace iandgratton.WordleHelper
                     Console.WriteLine();
                 }
 
-                foreach (char c in word)
+                foreach (char letter in potentialWord)
                 {
-                    if (Word.Contains(c))
+                    if (word.Contains(letter))
                     {
                         Console.ForegroundColor = ConsoleColor.Green;
                     }
-                    else if (!String.IsNullOrEmpty(KnownLetters) && KnownLetters.Contains(c))
+                    else if (!String.IsNullOrEmpty(knownLetters) && knownLetters.Contains(letter))
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;
                     }
@@ -88,7 +87,7 @@ namespace iandgratton.WordleHelper
                         Console.ForegroundColor = startingColour;
                     }
 
-                    Console.Write(c);
+                    Console.Write(letter);
                 }
                 
                 Console.Write(" ");
@@ -113,10 +112,7 @@ namespace iandgratton.WordleHelper
         
                 Console.ForegroundColor = ConsoleColor.DarkGray; 
             
-                foreach (char letter in excludedLetters.OrderBy(c => c))
-                {
-                    Console.Write($"{letter} ");
-                }
+                excludedLetters.OrderBy(c => c).ToList().ForEach(c => Console.Write($"{c} "));
 
                 Console.ForegroundColor = startingColour;
             }
@@ -134,9 +130,9 @@ namespace iandgratton.WordleHelper
             ConsoleColor startingColour = Console.ForegroundColor;
 
             Console.Write("            Word: ");
-            foreach (char c in word)
+            foreach (char letter in word)
             {
-                if (wildcards.Contains(c))
+                if (wildcards.Contains(letter))
                 {
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.Write("_ ");
@@ -144,7 +140,7 @@ namespace iandgratton.WordleHelper
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write($"{Char.ToUpper(c)} ");                    
+                    Console.Write($"{Char.ToUpper(letter)} ");                    
                 }
             }
             Console.WriteLine();
@@ -160,11 +156,8 @@ namespace iandgratton.WordleHelper
                 ConsoleColor startingColour = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Yellow;
 
-                foreach (char letter in knownLetters.OrderBy(c => c))
-                {
-                    Console.Write($"{letter} ");
-                }
-
+                knownLetters.OrderBy(c => c).ToList().ForEach( c=> Console.Write($"{c} "));
+                
                 Console.ForegroundColor = startingColour;
             }
             else
@@ -234,11 +227,11 @@ namespace iandgratton.WordleHelper
                 StringBuilder sb = new StringBuilder();
 
                 sb.Append("^");
-                foreach (char c in word)
+                foreach (char letter in word)
                 {
-                    if (wildcards.Contains(c))
+                    if (wildcards.Contains(letter))
                     {
-                        if (excludedLetters != null)
+                        if (excludedLetters != null && excludedLetters.Length > 0)
                         {
                             sb.Append($"(?![{new String(excludedLetters)}])");
                         }
@@ -246,7 +239,7 @@ namespace iandgratton.WordleHelper
                     }
                     else
                     {
-                        sb.Append($"{c}{{1}}");
+                        sb.Append($"{letter}{{1}}");
                     }
                 }
                 sb.Append("$");
