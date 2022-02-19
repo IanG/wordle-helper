@@ -61,9 +61,9 @@ namespace iandgratton.WordleHelper
 
             Console.WriteLine($"\n Potential Words: {potentialWords.Count}\n");
 
+            char[] wordChars = word.ToUpper().ToCharArray();
             int wordsOnLine = 0;
 
-            ConsoleColor startingColour = Console.ForegroundColor;
             foreach (string potentialWord in potentialWords)
             {
                 if (wordsOnLine >= WORDS_PER_LINE)
@@ -72,49 +72,50 @@ namespace iandgratton.WordleHelper
                     Console.WriteLine();
                 }
 
-                foreach (char letter in potentialWord)
+                char[] potentialWordChars = potentialWord.ToUpper().ToCharArray();
+
+                for (int i = 0; i < potentialWordChars.Length; i++)
                 {
-                    if (word.Contains(letter))
+                    if (potentialWord[i] == wordChars[i])
                     {
                         Console.ForegroundColor = ConsoleColor.Green;
                     }
-                    else if (!String.IsNullOrEmpty(knownLetters) && knownLetters.Contains(letter))
+                    else if (!String.IsNullOrEmpty(knownLetters) && knownLetters.ToUpper().Contains(potentialWordChars[i]))
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;
                     }
                     else
                     {
-                        Console.ForegroundColor = startingColour;
+                        Console.ResetColor();
                     }
 
-                    Console.Write(letter);
+                    Console.Write(potentialWordChars[i]);
                 }
-                
+
                 Console.Write(" ");
                 wordsOnLine++;
             }
 
+            Console.ResetColor();
             Console.Write("\n\n");
-            Console.ForegroundColor = startingColour;
         }
 
         private static void ShowDictionaryFile(string dictionaryFile)
         {
             Console.WriteLine($"\n Dictionary File: {dictionaryFile}");
         }
+
         private static void ShowExcludedLetters(string excludedLetters)
         {
             Console.Write("Excluded Letters: ");
 
             if (!String.IsNullOrEmpty(excludedLetters))
-            {
-                ConsoleColor startingColour = Console.ForegroundColor;
-        
+            {        
                 Console.ForegroundColor = ConsoleColor.DarkGray; 
             
-                excludedLetters.OrderBy(c => c).ToList().ForEach(c => Console.Write($"{c} "));
+                excludedLetters.ToUpper().OrderBy(c => c).ToList().ForEach(c => Console.Write($"{c} "));
 
-                Console.ForegroundColor = startingColour;
+                Console.ResetColor();
             }
             else
             {
@@ -123,12 +124,11 @@ namespace iandgratton.WordleHelper
 
             Console.WriteLine();
         }
+
         private static void ShowWord(string word)
         {
             List<char> wildcards = new List<char>() { ' ', '?' };
             
-            ConsoleColor startingColour = Console.ForegroundColor;
-
             Console.Write("            Word: ");
             foreach (char letter in word)
             {
@@ -143,9 +143,8 @@ namespace iandgratton.WordleHelper
                     Console.Write($"{Char.ToUpper(letter)} ");                    
                 }
             }
+            Console.ResetColor();
             Console.WriteLine();
-
-            Console.ForegroundColor = startingColour;
         }
 
         private static void ShowKnownLetters(string knownLetters)
@@ -153,12 +152,11 @@ namespace iandgratton.WordleHelper
             Console.Write("   Known Letters: ");
             if (!String.IsNullOrEmpty(knownLetters))
             {
-                ConsoleColor startingColour = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Yellow;
 
-                knownLetters.OrderBy(c => c).ToList().ForEach( c=> Console.Write($"{c} "));
+                knownLetters.ToUpper().OrderBy(c => c).ToList().ForEach(c => Console.Write($"{c} "));
                 
-                Console.ForegroundColor = startingColour;
+                Console.ResetColor();
             }
             else
             {
@@ -166,6 +164,7 @@ namespace iandgratton.WordleHelper
             }
             Console.WriteLine();
         }
+
         private static void ShowVersion()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
@@ -188,12 +187,12 @@ namespace iandgratton.WordleHelper
 
                 if (!String.IsNullOrEmpty(knownLetters))
                 {
-                    this.knownLetters = knownLetters.OrderBy(c => c).ToArray();
+                    this.knownLetters = knownLetters.ToUpper().OrderBy(c => c).ToArray();
                 }
 
                 if (!String.IsNullOrEmpty(excludedLetters))
                 {
-                    this.excludedLetters = excludedLetters.OrderBy(c => c).ToArray();
+                    this.excludedLetters = excludedLetters.ToUpper().OrderBy(c => c).ToArray();
                 }
 
                 this.dictionaryFile = dictionaryFile;
@@ -201,19 +200,19 @@ namespace iandgratton.WordleHelper
 
             public List<string> GetPotentialWords()
             {
-                List<string> words = new List<string>();
+                List<string> potentialWords = new List<string>();
 
                 Regex regex = GenerateRegEx();
 
-                foreach (string word in File.ReadLines(dictionaryFile))
+                foreach (string potentialWord in File.ReadLines(dictionaryFile))
                 {
-                    if (regex.Match(word).Success && ContainsKnownLetters(word))
+                    if (regex.Match(potentialWord).Success && ContainsKnownLetters(potentialWord))
                     {
-                        words.Add(word.ToUpper());
+                        potentialWords.Add(potentialWord.ToUpper());
                     }
                 }
-                
-                return words;
+
+                return potentialWords;
             }
 
             private bool ContainsKnownLetters(string word)
