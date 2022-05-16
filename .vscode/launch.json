@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/WordleHelper/bin/Debug/net5.0/WordleHelper.dll",
+            "program": "${workspaceFolder}/WordleHelper/bin/Debug/net6.0/WordleHelper.dll",
             "args": [
                 "--word", "M????",
                 "--known-letters", "AL", 
